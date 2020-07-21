@@ -3,9 +3,8 @@ use std::collections::HashMap;
 fn main() {
     println!("Welcome to rh_ust!");
     println!("List of commands:");
-    println!("add -> \"<full employee name>\" to \"<department name>\"");
-    println!("list all");
-    println!("list employees in <department name>");
+    println!("add");
+    println!("list");
     println!("quit");
 
     let mut departments : HashMap<&str, Vec<String>> = HashMap::new();
@@ -30,16 +29,18 @@ fn main() {
     		}
     	};
     	match command {
-    		"add" => parse_add(words),
+    		"add" => {
+	    		add()
+	    	},
     		_ => ()
     	}
     }
 }
 
-fn parse_add(parameters) -> (String, String) {
+fn add(parameters) -> (String, String) {
 	let mut employee = String::new();
 	if.parametes.next().starts_with("\"") {
-		
+
 	}
 }
 

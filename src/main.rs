@@ -8,13 +8,11 @@ fn main() {
 
     loop {
     	match get_command(){
-    		Some(Command::Add) => add(),
-    		Some(Command::List) => list(),
-    		Some(Command::Quit) => break,
-    		Some(Command::Help) => help(),
-    		None => continue,
+    		Command::Add => add(&mut departments),
+    		Command::List => list(&mut departments),
+    		Command::Quit => break,
+    		Command::Help => help(),
     	}
-
     }
 }
 
@@ -26,11 +24,29 @@ enum Command  {
 	Help,
 }
 
-fn add() {
-	println!("dummy function add");
+fn add(departments: &mut HashMap<&str, Vec<String>>) {
+	println!("Enter the name of the employee");
+	let employee = user_input().unwrap_or_else(|error| {
+		println!("Something wrong happened when getting employee name.");
+		return "".to_string();
+	});
+	println!("Enter the departmant name you want to add '{}' to", employee);
+	let dept = user_input().unwrap_or_else(|error| {
+		println!("Something wrong happened when getting department name");
+		return "".to_string();
+	});
+	if employee == "".to_string() || dept == "".to_string(){
+		println!("command not executed!");
+	}
+	if get_confirmation(std::fmt::format(format_args!("Add '{}' to '{}'? (y/n):", employee, dept ))) {
+		println!("Adding...");
+	} else {
+		println!("not adding");
+	}
+
 }
 
-fn list() {
+fn list(departments: &mut HashMap<&str, Vec<String>>) {
 	println!("dummy function list");
 }
 
@@ -41,7 +57,28 @@ fn help() {
     println!("quit");
 }
 
-fn get_command() -> Option<Command> {
+fn get_confirmation(prompt : String) -> bool {
+	loop {
+		println!("{}", prompt );
+		let input = user_input().unwrap_or_else(|error| {
+			println!("Failed to read line! try again... o press Ctrl-C");
+			"".to_string()
+		});
+		let mut words = input.split_whitespace();
+		match words.next(){
+			Some(word) => {
+				match word{
+					"y" | "yes" => return true,
+					"n" | "no" => return false,
+					_ => continue,
+				}
+			},
+			None => continue,
+		}
+	}
+}
+
+fn get_command() -> Command {
 	loop {
 		let input = user_input().unwrap_or_else(|error| {
 			println!("Failed to read line! try again... or press Ctrl-C");
@@ -51,12 +88,12 @@ fn get_command() -> Option<Command> {
 		let command = match words.next() {
 			Some(word) => {
 				match word {
-					"add" => return Some(Command::Add),
-					"list" => return Some(Command::List),
-					"help" => return Some(Command::Help),
-					"quit" => return Some(Command::Quit),
+					"add" => return Command::Add,
+					"list" => return Command::List,
+					"help" => return Command::Help,
+					"quit" => return Command::Quit,
 					_ => {
-						println!("Invalid command.");
+						println!("Invalid command: '{}'", word);
 						continue;
 					}
 				}
@@ -70,5 +107,5 @@ fn get_command() -> Option<Command> {
 fn user_input() -> Result<String, std::io::Error> {
 	let mut text = String::new();
 	std::io::stdin().read_line(&mut text)?;
-	Ok(text)
+	Ok(text.as_str().trim().to_string())
 }

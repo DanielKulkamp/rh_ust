@@ -1,10 +1,11 @@
 use std::collections::HashMap;
+use std::fmt;
 
 fn main() {
     println!("Welcome to rh_ust!");
     help();
 
-    let mut departments : HashMap<&str, Vec<String>> = HashMap::new();
+    let mut departments : HashMap<String, Vec<String>> = HashMap::new();
 
     loop {
     	match get_command(){
@@ -24,7 +25,7 @@ enum Command  {
 	Help,
 }
 
-fn add(departments: &mut HashMap<&str, Vec<String>>) {
+fn add(departments: &mut HashMap<String, Vec<String>>) {
 	println!("Enter the name of the employee");
 	let employee = user_input().unwrap_or_else(|error| {
 		println!("Something wrong happened when getting employee name.");
@@ -38,15 +39,33 @@ fn add(departments: &mut HashMap<&str, Vec<String>>) {
 	if employee == "".to_string() || dept == "".to_string(){
 		println!("command not executed!");
 	}
-	if get_confirmation(std::fmt::format(format_args!("Add '{}' to '{}'? (y/n):", employee, dept ))) {
-		println!("Adding...");
+	if get_confirmation(fmt::format(format_args!("Add '{}' to '{}'? (y/n):", &employee, &dept ))) {
+		if !departments.contains_key(dept.as_str()) {
+			if get_confirmation(fmt::format(format_args!("{} doesn't exist. Create it? (y/n):", &dept))){
+				departments.entry(dept).or_insert(vec![employee]);
+				println!("created deptarment. employee added");			
+			} else{
+				println!("Command canceled.");
+			}
+		} else {
+			match departments.get_mut(&dept){
+				Some(employee_list) => {
+					employee_list.push(employee);
+				},
+				None => {
+					println!("Failed to add employee. ")
+				}
+
+			}
+
+		}
 	} else {
 		println!("not adding");
 	}
 
 }
 
-fn list(departments: &mut HashMap<&str, Vec<String>>) {
+fn list(departments: &mut HashMap<String, Vec<String>>) {
 	println!("dummy function list");
 }
 

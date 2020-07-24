@@ -66,7 +66,28 @@ fn add(departments: &mut HashMap<String, Vec<String>>) {
 }
 
 fn list(departments: &mut HashMap<String, Vec<String>>) {
-	println!("dummy function list");
+	println!("Enter the name of the department or '*' for all departments");
+	let dept = user_input().unwrap_or_else(|error| {
+		println!("failed to read  department line.");
+		"".to_string()
+	});
+	if dept.starts_with('*') {
+		println!("listing all departments");
+		for dept in departments.keys() {
+			println!("Listing employees in {}", dept);
+			let mut employees = match departments.get(dept) {
+				Some(vector) => vector.clone(),
+				None => Vec::new(),
+			};
+			employees.sort();
+			for (number, employee) in employees.iter().enumerate(){
+				println!("{}: {}", number, employee );
+			}
+		}
+	}
+	if !departments.contains_key(&dept) {
+		return;
+	}
 }
 
 fn help() {

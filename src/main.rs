@@ -8,6 +8,7 @@ fn main() {
     let mut departments : HashMap<String, Vec<String>> = HashMap::new();
 
     loop {
+    	println!("Enter your command: ");
     	match get_command(){
     		Command::Add => add(&mut departments),
     		Command::List => list(&mut departments),
@@ -84,9 +85,19 @@ fn list(departments: &mut HashMap<String, Vec<String>>) {
 				println!("{}: {}", number, employee );
 			}
 		}
-	}
-	if !departments.contains_key(&dept) {
+	} else if !departments.contains_key(&dept) {
+		println!("No such department {}", dept);
 		return;
+	} else {
+		println!("Listing employees in {}", dept);
+		let mut employees = match departments.get(&dept) {
+			Some(vector) => vector.clone(),
+			None => Vec::new(),
+		};
+		employees.sort();
+		for (number, employee) in employees.iter().enumerate(){
+			println!("{}: {}", number, employee );
+		}
 	}
 }
 

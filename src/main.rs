@@ -18,7 +18,6 @@ fn main() {
     }
 }
 
-
 enum Command  {
 	Add,
 	List,
@@ -28,12 +27,12 @@ enum Command  {
 
 fn add(departments: &mut HashMap<String, Vec<String>>) {
 	println!("Enter the name of the employee");
-	let employee = user_input().unwrap_or_else(|error| {
+	let employee = user_input().unwrap_or_else(|_error| {
 		println!("Something wrong happened when getting employee name.");
 		return "".to_string();
 	});
 	println!("Enter the departmant name you want to add '{}' to", employee);
-	let dept = user_input().unwrap_or_else(|error| {
+	let dept = user_input().unwrap_or_else(|_error| {
 		println!("Something wrong happened when getting department name");
 		return "".to_string();
 	});
@@ -68,7 +67,7 @@ fn add(departments: &mut HashMap<String, Vec<String>>) {
 
 fn list(departments: &mut HashMap<String, Vec<String>>) {
 	println!("Enter the name of the department or '*' for all departments");
-	let dept = user_input().unwrap_or_else(|error| {
+	let dept = user_input().unwrap_or_else(|_error| {
 		println!("failed to read  department line.");
 		"".to_string()
 	});
@@ -111,7 +110,7 @@ fn help() {
 fn get_confirmation(prompt : String) -> bool {
 	loop {
 		println!("{}", prompt );
-		let input = user_input().unwrap_or_else(|error| {
+		let input = user_input().unwrap_or_else(|_error| {
 			println!("Failed to read line! try again... o press Ctrl-C");
 			"".to_string()
 		});
@@ -132,11 +131,11 @@ fn get_confirmation(prompt : String) -> bool {
 fn get_command() -> Command {
 	loop {
 		let input = user_input().unwrap_or_else(|error| {
-			println!("Failed to read line! try again... or press Ctrl-C");
+			println!("{} Failed to read line! try again or press Ctrl-C", error);
 			"".to_string()
 		});	
 		let mut words = input.split_whitespace();
-		let command = match words.next() {
+		match words.next() {
 			Some(word) => {
 				match word {
 					"add" => return Command::Add,

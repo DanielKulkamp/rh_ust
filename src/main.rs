@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::fmt;
+use rh_ust::{RhDbError, RhDatabase};
+
 
 fn main() {
     println!("Welcome to rh_ust!");
@@ -31,7 +33,7 @@ fn add(departments: &mut HashMap<String, Vec<String>>) {
 		println!("Something wrong happened when getting employee name.");
 		return "".to_string();
 	});
-	println!("Enter the departmant name you want to add '{}' to", employee);
+	println!("Enter the department name you want to add '{}' to", employee);
 	let dept = user_input().unwrap_or_else(|_error| {
 		println!("Something wrong happened when getting department name");
 		return "".to_string();
@@ -153,9 +155,12 @@ fn get_command() -> Command {
 	}
 }
 
-
 fn user_input() -> Result<String, std::io::Error> {
 	let mut text = String::new();
 	std::io::stdin().read_line(&mut text)?;
 	Ok(text.as_str().trim().to_string())
 }
+
+
+
+
